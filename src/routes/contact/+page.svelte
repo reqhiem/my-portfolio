@@ -1,10 +1,11 @@
 <script>
   import Header from "../../components/header.svelte";
+  import { base } from '$app/paths';
 </script>
 
 <svelte:head>
   <title>Contact me - Joel Perca</title>
-  <link rel="stylesheet" href="/css/contact.css" />
+  <link rel="stylesheet" href="{base}/css/contact.css" />
 </svelte:head>
 
 <div id="content" class="content">
