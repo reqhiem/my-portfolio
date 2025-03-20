@@ -1,10 +1,10 @@
 <script>
-  import Header from "../components/header.svelte";
+  import Header from "../components/Header.svelte";
   import { base } from '$app/paths';
 </script>
 
 <svelte:head>
-  <title>Home</title>
+  <title>Joel Perca - Software Engineer</title>
   <link rel="stylesheet" href="{base}/css/home.css">
 </svelte:head>
 

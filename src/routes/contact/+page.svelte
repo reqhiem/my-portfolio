@@ -1,5 +1,5 @@
 <script>
-  import Header from "../../components/header.svelte";
+  import Header from "../../components/Header.svelte";
   import { base } from '$app/paths';
 </script>
 
