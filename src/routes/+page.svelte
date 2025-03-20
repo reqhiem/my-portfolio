@@ -1,10 +1,11 @@
 <script>
   import Header from "../components/header.svelte";
+  import { base } from '$app/paths';
 </script>
 
 <svelte:head>
   <title>Home</title>
-  <link rel="stylesheet" href="/css/home.css">
+  <link rel="stylesheet" href="{base}/css/home.css">
 </svelte:head>
 
 <div id="content" class="content">
@@ -19,12 +20,12 @@
       </p>
       <div class="hero-buttons">
         <button class="hero-button">Download Resume</button>
-        <a href="/contact" class="hero-button">Contact</a>
+        <a href="{base}/contact" class="hero-button">Contact</a>
       </div>
     </div>
 
     <img
-      src="/images/deadpool-metarupx.gif"
+      src="{base}/images/deadpool-metarupx.gif"
       alt="Happy Deadpool"
       width="128"
     />
