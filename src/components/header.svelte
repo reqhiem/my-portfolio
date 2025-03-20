@@ -1,13 +1,14 @@
 <script>
   import { page } from "$app/stores";
+  import { base } from '$app/paths';
 </script>
 
 <nav class="header">
-  <a href="/" class:active={$page.url.pathname === "/"}>Home</a>
-  <a href="/projects" class:active={$page.url.pathname === "/projects"}
+  <a href="{base}/" class:active={$page.url.pathname === "/"}>Home</a>
+  <a href="{base}/projects" class:active={$page.url.pathname === "/projects"}
     >Projects</a
   >
-  <a href="/contact" class:active={$page.url.pathname === "/contact"}>Contact me</a
+  <a href="{base}/contact" class:active={$page.url.pathname === "/contact"}>Contact me</a
   >
 </nav>
 
