@@ -11,12 +11,6 @@ const config = {
 		}),
 		paths: {
 			base: process.env.NODE_ENV === 'production' ? '/my-portfolio' : '',
-		},
-		prerender: {
-			default: true,
-			handleHttpError: ({ path, referrer, message }) => {
-				console.warn(`${path} referido desde ${referrer} falló en la prerenderización: ${message}`);
-			}
 		}
 	}
 };
