@@ -7,7 +7,7 @@
   <a href="/projects" class:active={$page.url.pathname === "/projects"}
     >Projects</a
   >
-  <a href="/contact" class:active={$page.url.pathname === "/contact"}>Contact</a
+  <a href="/contact" class:active={$page.url.pathname === "/contact"}>Contact me</a
   >
 </nav>
 
