@@ -3,7 +3,7 @@
 }
 
 .hero-description {
-  color: var(--gray-600);
+  color: var(--text-color);
 }
 
 .hero-buttons {
