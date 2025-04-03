@@ -1,26 +1,65 @@
 <script>
+  import * as d3 from "d3";
   import Header from "../../components/Header.svelte";
-  import { base } from '$app/paths';
-  import ProjectCard from "../../components/ProjectCard.svelte";
-  import projects from '../../lib/projects';
-  
-  let selectedCategory = 'all';
-  
-  $: filteredProjects = selectedCategory === 'all' 
-    ? projects 
-    : projects.filter(project => {
-        if (selectedCategory === 'featured') return project.featured;
-        if (selectedCategory === 'completed') return project.completed;
-        if (selectedCategory === 'in-progress') return !project.completed;
-        return true;
-      });
-      
+  import ProjectCard from "$lib/ProjectCard.svelte";
+  import projects from "../../lib/projects";
+  import Pie from "$lib/Pie.svelte";
+
+  let selectedCategory = "all";
+  let filteredProjects = [];
+  let selectedYearIndex = -1;
+
   const categories = [
-    { id: 'all', name: 'All Projects' },
-    { id: 'featured', name: 'Featured' },
-    { id: 'completed', name: 'Completed' },
-    { id: 'in-progress', name: 'In Progress' }
+    { id: "all", name: "All Projects" },
+    { id: "featured", name: "Featured" },
+    { id: "completed", name: "Completed" },
+    { id: "in-progress", name: "In Progress" },
   ];
+
+  let pieData;
+  let query = "";
+  let selectedYear;
+
+  $: {
+    pieData = {};
+
+    filteredProjects =
+      selectedCategory === "all"
+        ? projects.filter(
+            (project) =>
+              query === "" ||
+              project.title.toLowerCase().includes(query.toLowerCase()) ||
+              project.description.toLowerCase().includes(query.toLowerCase()) ||
+              project.technologies.some((tech) =>
+                tech.toLowerCase().includes(query.toLowerCase())
+              )
+          )
+        : projects.filter((project) => {
+            const matchesCategory =
+              (selectedCategory === "featured" && project.featured) ||
+              (selectedCategory === "completed" && project.completed) ||
+              (selectedCategory === "in-progress" && !project.completed);
+
+            const matchesSearch =
+              query === "" ||
+              project.title.toLowerCase().includes(query.toLowerCase()) ||
+              project.description.toLowerCase().includes(query.toLowerCase()) ||
+              project.technologies.some((tech) =>
+                tech.toLowerCase().includes(query.toLowerCase())
+              );
+
+            return matchesCategory && matchesSearch;
+          });
+
+    let rolledData = d3.rollups(
+      filteredProjects,
+      (v) => v.length,
+      (d) => d.year
+    );
+    pieData = rolledData.map(([year, count]) => {
+      return { value: count, label: year };
+    });
+  }
 </script>
 
 <svelte:head>
@@ -31,25 +70,42 @@
   <Header />
   <section class="projects-container">
     <div class="projects-header">
-      <h1>My Projects</h1>
-      <p>Here's a collection of my recent projects. Each one represents my passion for creating well-designed and functional applications.</p>
-      
+      <h1>
+        My Projects <span class="project-count">{filteredProjects.length}</span>
+      </h1>
+      <p>
+        Here's a collection of my recent projects. Each one represents my
+        passion for creating well-designed and functional applications.
+      </p>
+
       <div class="filter-container">
         {#each categories as category}
-          <button 
-            class="filter-button {selectedCategory === category.id ? 'active' : ''}"
-            on:click={() => selectedCategory = category.id}
+          <button
+            class="filter-button {selectedCategory === category.id
+              ? 'active'
+              : ''}"
+            on:click={() => (selectedCategory = category.id)}
           >
             {category.name}
           </button>
         {/each}
       </div>
+      <input
+        type="search"
+        bind:value={query}
+        aria-label="Search projects"
+        placeholder="Search projects..."
+        class="search-input"
+      />
     </div>
-    
+
     {#if filteredProjects.length > 0}
+      <div>
+        <Pie data={pieData} bind:selectedIndex={selectedYearIndex} />
+      </div>
       <div class="projects-grid">
         {#each filteredProjects as project (project.id)}
-          <ProjectCard 
+          <ProjectCard
             title={project.title}
             description={project.description}
             technologies={project.technologies}
@@ -70,8 +126,6 @@
   </section>
 </div>
 
-
-
 <style>
   .projects-container {
     max-width: 1200px;
@@ -87,7 +141,20 @@
   .projects-header h1 {
     font-size: 2.5rem;
     margin-bottom: 16px;
-    color: #1f2937;
+    color: var(--secondary-color);
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .project-count {
+    font-size: 1.2rem;
+    font-weight: 200;
+    color: white;
+    background-color: var(--primary-color);
+    padding: 4px 12px;
+    border-radius: 20px;
   }
 
   .projects-header p {
@@ -146,7 +213,7 @@
     .projects-header h1 {
       font-size: 2rem;
     }
-    
+
     .projects-grid {
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 20px;
@@ -157,15 +224,27 @@
     .projects-container {
       padding: 30px 15px;
     }
-    
+
     .filter-container {
       flex-direction: column;
       align-items: center;
     }
-    
+
     .filter-button {
       width: 100%;
       max-width: 250px;
     }
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 50px;
+    background-color: #f5f5f5;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    outline: none;
   }
 </style>

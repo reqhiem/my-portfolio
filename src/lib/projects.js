@@ -9,7 +9,8 @@ const projects = [
     preview_link: "https://ecommerce-demo.example.com",
     featured: true,
     completed: true,
-    date: "2024-01-15"
+    date: "2024-01-15",
+    year: 2024
   },
   {
     id: 2,
@@ -21,7 +22,8 @@ const projects = [
     preview_link: "https://weather-app-demo.example.com",
     featured: true,
     completed: true,
-    date: "2023-11-20"
+    date: "2023-11-20",
+    year: 2022
   },
   {
     id: 3,
@@ -33,7 +35,8 @@ const projects = [
     preview_link: "https://tasks-demo.example.com",
     featured: false,
     completed: true,
-    date: "2023-09-05"
+    date: "2023-09-05",
+    year: 2025
   },
   {
     id: 4,
@@ -45,7 +48,8 @@ const projects = [
     preview_link: "https://recipe-finder-demo.example.com",
     featured: false,
     completed: true,
-    date: "2023-07-12"
+    date: "2023-07-12",
+    year: 2023
   },
   {
     id: 5,
@@ -57,7 +61,8 @@ const projects = [
     preview_link: "https://portfolio-demo.example.com",
     featured: true,
     completed: false,
-    date: "2024-03-01"
+    date: "2024-03-01",
+    year: 2024
   },
   {
     id: 6,
@@ -69,7 +74,138 @@ const projects = [
     preview_link: "https://blockchain-demo.example.com",
     featured: false,
     completed: false,
-    date: "2024-02-18"
+    date: "2024-02-18",
+    year: 2022
+  },
+  {
+    id: 7,
+    title: "Social Media Dashboard",
+    description: "Unified dashboard to manage and analyze multiple social media accounts with content scheduling, analytics, and engagement tracking.",
+    technologies: ["Angular", "Node.js", "Express", "PostgreSQL", "Social Media APIs"],
+    image: "https://placehold.co/600x400/f43f5e/ffffff?text=Social+Media+Dashboard",
+    github_link: "https://github.com/yourusername/social-dashboard",
+    preview_link: "https://social-dash-demo.example.com",
+    featured: true,
+    completed: true,
+    date: "2023-08-28",
+    year: 2023
+  },
+  {
+    id: 8,
+    title: "Budget Tracker",
+    description: "Personal finance application that helps users track income, expenses, and savings goals with visualization of spending patterns and budget categories.",
+    technologies: ["React Native", "Firebase", "Redux", "Victory Charts"],
+    image: "https://placehold.co/600x400/14b8a6/ffffff?text=Budget+Tracker",
+    github_link: "https://github.com/yourusername/budget-tracker",
+    preview_link: "https://budget-app-demo.example.com",
+    featured: false,
+    completed: true,
+    date: "2023-10-11",
+    year: 2023
+  },
+  {
+    id: 9,
+    title: "AI Image Generator",
+    description: "Web application that uses machine learning to generate unique images based on text prompts or style transfers from existing images.",
+    technologies: ["Python", "Flask", "TensorFlow", "React", "WebGL"],
+    image: "https://placehold.co/600x400/8b5cf6/ffffff?text=AI+Image+Generator",
+    github_link: "https://github.com/yourusername/ai-image-generator",
+    preview_link: "https://ai-image-demo.example.com",
+    featured: true,
+    completed: false,
+    date: "2024-01-30",
+    year: 2021
+  },
+  {
+    id: 10,
+    title: "Fitness Tracker",
+    description: "Mobile application for tracking workouts, nutrition, and fitness progress with personalized recommendations and achievement badges.",
+    technologies: ["Flutter", "Firebase", "Provider", "Google Fit API", "Apple HealthKit"],
+    image: "https://placehold.co/600x400/10b981/ffffff?text=Fitness+Tracker",
+    github_link: "https://github.com/yourusername/fitness-tracker",
+    preview_link: "https://fitness-app-demo.example.com",
+    featured: false,
+    completed: true,
+    date: "2023-12-05",
+    year: 2023
+  },
+  {
+    id: 11,
+    title: "Language Learning Platform",
+    description: "Interactive platform for learning languages with speech recognition, vocabulary tracking, grammar exercises, and conversational practice.",
+    technologies: ["Next.js", "MongoDB", "Web Speech API", "Socket.io", "Auth0"],
+    image: "https://placehold.co/600x400/f59e0b/ffffff?text=Language+Learning",
+    github_link: "https://github.com/yourusername/language-learning",
+    preview_link: "https://language-platform-demo.example.com",
+    featured: true,
+    completed: false,
+    date: "2024-02-25",
+    year: 2024
+  },
+  {
+    id: 12,
+    title: "Real Estate Marketplace",
+    description: "Platform connecting buyers, sellers, and real estate agents with property listings, virtual tours, mortgage calculators, and neighborhood analytics.",
+    technologies: ["React", "Django", "PostgreSQL", "Google Maps API", "ThreeJS"],
+    image: "https://placehold.co/600x400/ef4444/ffffff?text=Real+Estate+Marketplace",
+    github_link: "https://github.com/yourusername/real-estate-platform",
+    preview_link: "https://realestate-demo.example.com",
+    featured: false,
+    completed: true,
+    date: "2023-11-08",
+    year: 2023
+  },
+  {
+    id: 13,
+    title: "Podcast Streaming App",
+    description: "Audio streaming platform for podcasts with subscription management, offline listening, custom playlists, and personalized recommendations.",
+    technologies: ["React Native", "Node.js", "GraphQL", "AWS Amplify", "Audio API"],
+    image: "https://placehold.co/600x400/0284c7/ffffff?text=Podcast+App",
+    github_link: "https://github.com/yourusername/podcast-app",
+    preview_link: "https://podcast-app-demo.example.com",
+    featured: true,
+    completed: true,
+    date: "2023-09-30",
+    year: 2023
+  },
+  {
+    id: 14,
+    title: "Multiplayer Game",
+    description: "Browser-based multiplayer strategy game with real-time interactions, custom avatars, leaderboards, and in-game chat functionality.",
+    technologies: ["Phaser.js", "Socket.io", "Node.js", "MongoDB", "WebGL"],
+    image: "https://placehold.co/600x400/7c3aed/ffffff?text=Multiplayer+Game",
+    github_link: "https://github.com/yourusername/multiplayer-game",
+    preview_link: "https://game-demo.example.com",
+    featured: false,
+    completed: false,
+    date: "2024-03-15",
+    year: 2024
+  },
+  {
+    id: 15,
+    title: "Code Learning Platform",
+    description: "Interactive platform for learning programming with code challenges, real-time code execution, progress tracking, and mentorship connections.",
+    technologies: ["Vue.js", "Express", "Docker", "Judge0 API", "PostgreSQL"],
+    image: "https://placehold.co/600x400/d946ef/ffffff?text=Code+Learning",
+    github_link: "https://github.com/yourusername/code-learning-platform",
+    preview_link: "https://code-learning-demo.example.com",
+    featured: true,
+    completed: false,
+    date: "2024-01-20",
+    year: 2024
+  },
+  {
+    id: 16,
+    title: "Automated Job Tracker",
+    description: "Application for job seekers to track applications, schedule interviews, and manage follow-ups with analytics on application success rates.",
+    technologies: ["React", "Firebase", "Material UI", "Google Calendar API"],
+    image: "https://placehold.co/600x400/0ea5e9/ffffff?text=Job+Tracker",
+    github_link: "https://github.com/yourusername/job-tracker",
+    preview_link: "https://job-tracker-demo.example.com",
+    featured: false,
+    completed: true,
+    date: "2023-10-15",
+    year: 2023
   }
 ]
 

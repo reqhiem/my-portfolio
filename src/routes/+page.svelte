@@ -56,3 +56,21 @@
     />
   </div>
 </div>
+
+<style>
+  dl {
+    display: grid;
+    grid-template-columns: auto;
+  }
+  dt {
+    grid-row: 1;
+    font-family: inherit;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  dd {
+    font-family: inherit;
+    font-weight: bold;
+  }
+
+</style>
