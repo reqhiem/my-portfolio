@@ -40,6 +40,7 @@
   <nav class="header">
     <a href="{base}/" class:active={isActive("/")}>Home</a>
     <a href="{base}/projects" class:active={isActive("/projects")}>Projects</a>
+    <a href="{base}/meta" class:active={isActive("/meta")}>Meta</a>
     <a href="{base}/contact" class:active={isActive("/contact")}>Contact me</a>
   </nav>
   <div class="header">

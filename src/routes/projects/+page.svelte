@@ -1,6 +1,5 @@
 <script>
   import * as d3 from "d3";
-  import Header from "../../components/Header.svelte";
   import ProjectCard from "$lib/ProjectCard.svelte";
   import projects from "../../lib/projects";
   import Pie from "$lib/Pie.svelte";
@@ -66,65 +65,62 @@
   <title>Projects - Joel Perca</title>
 </svelte:head>
 
-<div id="content" class="content">
-  <Header />
-  <section class="projects-container">
-    <div class="projects-header">
-      <h1>
-        My Projects <span class="project-count">{filteredProjects.length}</span>
-      </h1>
-      <p>
-        Here's a collection of my recent projects. Each one represents my
-        passion for creating well-designed and functional applications.
-      </p>
+<section class="projects-container">
+  <div class="projects-header">
+    <h1>
+      My Projects <span class="project-count">{filteredProjects.length}</span>
+    </h1>
+    <p>
+      Here's a collection of my recent projects. Each one represents my passion
+      for creating well-designed and functional applications.
+    </p>
 
-      <div class="filter-container">
-        {#each categories as category}
-          <button
-            class="filter-button {selectedCategory === category.id
-              ? 'active'
-              : ''}"
-            on:click={() => (selectedCategory = category.id)}
-          >
-            {category.name}
-          </button>
-        {/each}
-      </div>
-      <input
-        type="search"
-        bind:value={query}
-        aria-label="Search projects"
-        placeholder="Search projects..."
-        class="search-input"
-      />
+    <div class="filter-container">
+      {#each categories as category}
+        <button
+          class="filter-button {selectedCategory === category.id
+            ? 'active'
+            : ''}"
+          on:click={() => (selectedCategory = category.id)}
+        >
+          {category.name}
+        </button>
+      {/each}
     </div>
+    <input
+      type="search"
+      bind:value={query}
+      aria-label="Search projects"
+      placeholder="Search projects..."
+      class="search-input"
+    />
+  </div>
 
-    {#if filteredProjects.length > 0}
-      <div>
-        <Pie data={pieData} bind:selectedIndex={selectedYearIndex} />
-      </div>
-      <div class="projects-grid">
-        {#each filteredProjects as project (project.id)}
-          <ProjectCard
-            title={project.title}
-            description={project.description}
-            technologies={project.technologies}
-            image={project.image}
-            github_link={project.github_link}
-            preview_link={project.preview_link}
-            featured={project.featured}
-            completed={project.completed}
-            date={project.date}
-          />
-        {/each}
-      </div>
-    {:else}
-      <div class="no-projects">
-        <p>No projects found in this category. Check back soon!</p>
-      </div>
-    {/if}
-  </section>
-</div>
+  {#if filteredProjects.length > 0}
+    <div>
+      <Pie data={pieData} bind:selectedIndex={selectedYearIndex} />
+    </div>
+    <div class="projects-grid">
+      {#each filteredProjects as project (project.id)}
+        <ProjectCard
+          title={project.title}
+          description={project.description}
+          technologies={project.technologies}
+          image={project.image}
+          github_link={project.github_link}
+          preview_link={project.preview_link}
+          featured={project.featured}
+          completed={project.completed}
+          date={project.date}
+        />
+      {/each}
+    </div>
+  {:else}
+    <div class="no-projects">
+      <p>No projects found in this category. Check back soon!</p>
+    </div>
+  {/if}
+</section>
 
 <style>
   .projects-container {
