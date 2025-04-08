@@ -4,9 +4,9 @@
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
+		"prebuild": "npx elocuent -d static,src -o static/loc.csv",
 		"build": "vite build",
-		"preview": "vite preview",
-		"prebuild": "npx elocuent -d static,src -o static/loc.csv"
+		"preview": "vite preview"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",
