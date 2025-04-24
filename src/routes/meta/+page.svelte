@@ -25,6 +25,7 @@
   let commitTooltip;
   let tooltipPosition = { x: 0, y: 0 };
   let clickedCommits = [];
+  let commitProgress = 100;
 
   async function dotInteraction(index, evt) {
     let hoveredDot = evt.target;
@@ -135,6 +136,8 @@
     type,
     selectedCounts.get(type) || 0,
   ]);
+  $: timeScale = d3.scaleTime().domain([minDate, maxDate]).range([0, 100]);
+  $: commitMaxTime = timeScale.invert(commitProgress);
 </script>
 
 <h1>Meta</h1>
@@ -175,10 +178,26 @@
 
 <div class="scatterplot-chart-container">
   <h2>Commits by time and day</h2>
+
+  <div class="slider-container">
+    <div class="slider">
+      <label for="slider">Show commits until:</label>
+      <input
+        type="range"
+        id="slider"
+        name="slider"
+        min="0"
+        max="100"
+        bind:value={commitProgress}
+      />
+    </div>
+    <time class="time-label">{commitMaxTime.toLocaleString()}</time>
+  </div>
+
   <svg viewBox="0 0 {width} {height}">
     <!-- scatterplot will go here -->
     <g class="dots">
-      {#each commits as commit, index}
+      {#each filteredCommits as commit, index (commit.id)}
         <circle
           class:selected={clickedCommits.includes(commit)}
           cx={xScale(commit.datetime)}
@@ -285,5 +304,19 @@
   }
   .selected {
     fill: var(--primary-color);
+  }
+
+  .slider-container {
+    display: grid;
+  }
+  .slider {
+    display: flex;
+  }
+  #slider {
+    flex: 1;
+  }
+  .time-label {
+    font-size: 0.75em;
+    text-align: right;
   }
 </style>
