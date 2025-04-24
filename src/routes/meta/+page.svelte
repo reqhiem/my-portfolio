@@ -42,7 +42,7 @@
     } else if (evt.type === "mouseleave") {
       hoveredIndex = -1;
     } else if (evt.type === "click") {
-      let commit = commits[index];
+      let commit = filteredCommits[index];
       if (!clickedCommits.includes(commit)) {
         // Add the commit to the clickedCommits array
         clickedCommits = [...clickedCommits, commit];
@@ -80,7 +80,7 @@
         };
 
         // Like ret.lines = lines
-        // but non-enumerable so it doesn’t show up in JSON.stringify
+        // but non-enumerable so it doesn't show up in JSON.stringify
         Object.defineProperty(ret, "lines", {
           value: lines,
           configurable: true,
@@ -92,8 +92,23 @@
       });
   });
 
-  $: minDate = d3.min(commits.map((d) => d.date));
-  $: maxDate = d3.max(commits.map((d) => d.date));
+  // Calculate minDate and maxDate from all commits first
+  $: minDate = d3.min(commits, (d) => d.datetime);
+  $: maxDate = d3.max(commits, (d) => d.datetime);
+
+  // Now calculate timeScale based on the full date range
+  // Este código se movió arriba para romper la dependencia cíclica
+
+  // Then filter commits based on commitMaxTime
+  $: filteredCommits = commits.filter(
+    (commit) => commit.datetime <= commitMaxTime
+  );
+
+  // Filter lines based on commitMaxTime
+  $: filteredLines = data.filter(
+    (line) => new Date(line.datetime) <= commitMaxTime
+  );
+
   $: maxDatePlusOne = new Date(maxDate);
   $: maxDatePlusOne.setDate(maxDatePlusOne.getDate() + 1);
 
@@ -117,25 +132,31 @@
       d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width)
     );
   }
-  $: hoveredCommit = commits[hoveredIndex] ?? hoveredCommit ?? {};
+
+  $: hoveredCommit = filteredCommits[hoveredIndex] ?? hoveredCommit ?? {};
+
   $: rScale = d3
     .scaleSqrt()
     .domain(d3.extent(commits.map((d) => d.totalLines)))
     .range([2, 30]);
 
   $: allTypes = Array.from(new Set(data.map((d) => d.type)));
+
   $: selectedLines = (
-    clickedCommits.length > 0 ? clickedCommits : commits
+    clickedCommits.length > 0 ? clickedCommits : filteredCommits
   ).flatMap((d) => d.lines);
+
   $: selectedCounts = d3.rollup(
     selectedLines,
     (v) => v.length,
     (d) => d.type
   );
+
   $: languageBreakdown = allTypes.map((type) => [
     type,
     selectedCounts.get(type) || 0,
   ]);
+
   $: timeScale = d3.scaleTime().domain([minDate, maxDate]).range([0, 100]);
   $: commitMaxTime = timeScale.invert(commitProgress);
 </script>
@@ -168,11 +189,11 @@
   <h2>Summary</h2>
   <dl class="stats">
     <dt>Total <abbr title="Lines of code">LOC</abbr></dt>
-    <dd>{data.length}</dd>
+    <dd>{filteredLines.length}</dd>
     <dt>Files</dt>
-    <dd>{d3.groups(data, (d) => d.file).length}</dd>
+    <dd>{d3.groups(filteredLines, (d) => d.file).length}</dd>
     <dt>Commits</dt>
-    <dd>{d3.groups(data, (d) => d.commit).length}</dd>
+    <dd>{d3.groups(filteredLines, (d) => d.commit).length}</dd>
   </dl>
 </section>
 
@@ -225,6 +246,9 @@
 <Bar data={languageBreakdown} {width} />
 
 <style>
+  @starting-style {
+    r: 0;
+  }
   dl {
     display: grid;
     grid-template-columns: auto;
