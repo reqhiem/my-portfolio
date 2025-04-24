@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import * as d3 from "d3";
   import { computePosition, autoPlacement, offset } from "@floating-ui/dom";
+  import Bar from "$lib/Bar.svelte";
 
   let data = [];
   let commits = [];
@@ -23,6 +24,7 @@
   let cursor = { x: 0, y: 0 };
   let commitTooltip;
   let tooltipPosition = { x: 0, y: 0 };
+  let clickedCommits = [];
 
   async function dotInteraction(index, evt) {
     let hoveredDot = evt.target;
@@ -38,6 +40,15 @@
       });
     } else if (evt.type === "mouseleave") {
       hoveredIndex = -1;
+    } else if (evt.type === "click") {
+      let commit = commits[index];
+      if (!clickedCommits.includes(commit)) {
+        // Add the commit to the clickedCommits array
+        clickedCommits = [...clickedCommits, commit];
+      } else {
+        // Remove the commit from the array
+        clickedCommits = clickedCommits.filter((c) => c !== commit);
+      }
     }
   }
 
@@ -78,7 +89,6 @@
 
         return ret;
       });
-    console.log(commits);
   });
 
   $: minDate = d3.min(commits.map((d) => d.date));
@@ -111,6 +121,20 @@
     .scaleSqrt()
     .domain(d3.extent(commits.map((d) => d.totalLines)))
     .range([2, 30]);
+
+  $: allTypes = Array.from(new Set(data.map((d) => d.type)));
+  $: selectedLines = (
+    clickedCommits.length > 0 ? clickedCommits : commits
+  ).flatMap((d) => d.lines);
+  $: selectedCounts = d3.rollup(
+    selectedLines,
+    (v) => v.length,
+    (d) => d.type
+  );
+  $: languageBreakdown = allTypes.map((type) => [
+    type,
+    selectedCounts.get(type) || 0,
+  ]);
 </script>
 
 <h1>Meta</h1>
@@ -137,18 +161,32 @@
   <!-- Add: Time, author, lines edited -->
 </dl>
 
-<div>
+<section>
+  <h2>Summary</h2>
+  <dl class="stats">
+    <dt>Total <abbr title="Lines of code">LOC</abbr></dt>
+    <dd>{data.length}</dd>
+    <dt>Files</dt>
+    <dd>{d3.groups(data, (d) => d.file).length}</dd>
+    <dt>Commits</dt>
+    <dd>{d3.groups(data, (d) => d.commit).length}</dd>
+  </dl>
+</section>
+
+<div class="scatterplot-chart-container">
   <h2>Commits by time and day</h2>
   <svg viewBox="0 0 {width} {height}">
     <!-- scatterplot will go here -->
     <g class="dots">
       {#each commits as commit, index}
         <circle
+          class:selected={clickedCommits.includes(commit)}
           cx={xScale(commit.datetime)}
           cy={yScale(commit.hourFrac)}
           fill="steelblue"
           on:mouseenter={(evt) => dotInteraction(index, evt)}
           on:mouseleave={(evt) => dotInteraction(index, evt)}
+          on:click={(evt) => dotInteraction(index, evt)}
           r={rScale(commit.totalLines)}
           fill-opacity="0.5"
         />
@@ -165,17 +203,7 @@
   </svg>
 </div>
 
-<section>
-  <h2>Summary</h2>
-  <dl class="stats">
-    <dt>Total <abbr title="Lines of code">LOC</abbr></dt>
-    <dd>{data.length}</dd>
-    <dt>Files</dt>
-    <dd>{d3.groups(data, (d) => d.file).length}</dd>
-    <dt>Commits</dt>
-    <dd>{d3.groups(data, (d) => d.commit).length}</dd>
-  </dl>
-</section>
+<Bar data={languageBreakdown} {width} />
 
 <style>
   dl {
@@ -192,6 +220,9 @@
   dd {
     font-family: inherit;
     font-weight: bold;
+  }
+  .scatterplot-chart-container {
+    margin: 16px 0;
   }
   section {
     border-width: 0.15em;
@@ -251,5 +282,8 @@
     }
     transform-origin: center;
     transform-box: fill-box;
+  }
+  .selected {
+    fill: var(--primary-color);
   }
 </style>
