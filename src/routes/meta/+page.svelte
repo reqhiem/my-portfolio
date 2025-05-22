@@ -4,6 +4,7 @@
   import { computePosition, autoPlacement, offset } from "@floating-ui/dom";
   import Bar from "$lib/Bar.svelte";
   import Scrolly from "svelte-scrolly";
+  import FileLines from "../../lib/FileLines.svelte";
 
   let data = [];
   let commits = [];
@@ -200,7 +201,7 @@
 
 <Scrolly bind:progress={commitProgress}>
     {#each commits as commit, index}
-    <p>
+    <p style="margin-block: 12px; font-size: 0.9em">
       On {commit.datetime.toLocaleString("en", {
         dateStyle: "full",
         timeStyle: "short",
@@ -264,7 +265,9 @@
       </svg>
     </div>
 
+    
     <Bar data={languageBreakdown} {width} />
+    <FileLines lines={selectedLines} width={0.7*width} />
   </svelte:fragment>
 </Scrolly>
 
