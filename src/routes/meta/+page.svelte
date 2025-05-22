@@ -3,6 +3,7 @@
   import * as d3 from "d3";
   import { computePosition, autoPlacement, offset } from "@floating-ui/dom";
   import Bar from "$lib/Bar.svelte";
+  import Scrolly from "svelte-scrolly";
 
   let data = [];
   let commits = [];
@@ -197,53 +198,75 @@
   </dl>
 </section>
 
-<div class="scatterplot-chart-container">
-  <h2>Commits by time and day</h2>
+<Scrolly bind:progress={commitProgress}>
+    {#each commits as commit, index}
+    <p>
+      On {commit.datetime.toLocaleString("en", {
+        dateStyle: "full",
+        timeStyle: "short",
+      })},
+      {index === 0
+        ? "I set forth on my very first commit, beginning a magical journey of code. You can view it "
+        : "I added another commit. See it "}
+      <a href={commit.url} target="_blank">
+        {index === 0 ? "here" : "here"}
+      </a>. This update transformed {commit.totalLines} lines across {d3.rollups(
+        commit.lines,
+        (D) => D.length,
+        (d) => d.file
+      ).length} files. With every commit, our project grows.
+    </p>
+  {/each}
+  <svelte:fragment slot="viz">
+    <div class="scatterplot-chart-container">
+      <h2>Commits by time and day</h2>
 
-  <div class="slider-container">
-    <div class="slider">
-      <label for="slider">Show commits until:</label>
-      <input
-        type="range"
-        id="slider"
-        name="slider"
-        min="0"
-        max="100"
-        bind:value={commitProgress}
-      />
-    </div>
-    <time class="time-label">{commitMaxTime.toLocaleString()}</time>
-  </div>
+      <div class="slider-container">
+        <div class="slider">
+          <label for="slider">Show commits until:</label>
+          <input
+            type="range"
+            id="slider"
+            name="slider"
+            min="0"
+            max="100"
+            bind:value={commitProgress}
+          />
+        </div>
+        <time class="time-label">{commitMaxTime.toLocaleString()}</time>
+      </div>
 
-  <svg viewBox="0 0 {width} {height}">
-    <!-- scatterplot will go here -->
-    <g class="dots">
-      {#each filteredCommits as commit, index (commit.id)}
-        <circle
-          class:selected={clickedCommits.includes(commit)}
-          cx={xScale(commit.datetime)}
-          cy={yScale(commit.hourFrac)}
-          fill="steelblue"
-          on:mouseenter={(evt) => dotInteraction(index, evt)}
-          on:mouseleave={(evt) => dotInteraction(index, evt)}
-          on:click={(evt) => dotInteraction(index, evt)}
-          r={rScale(commit.totalLines)}
-          fill-opacity="0.5"
+      <svg viewBox="0 0 {width} {height}">
+        <!-- scatterplot will go here -->
+        <g class="dots">
+          {#each filteredCommits as commit, index (commit.id)}
+            <circle
+              class:selected={clickedCommits.includes(commit)}
+              cx={xScale(commit.datetime)}
+              cy={yScale(commit.hourFrac)}
+              fill="steelblue"
+              on:mouseenter={(evt) => dotInteraction(index, evt)}
+              on:mouseleave={(evt) => dotInteraction(index, evt)}
+              on:click={(evt) => dotInteraction(index, evt)}
+              r={rScale(commit.totalLines)}
+              fill-opacity="0.5"
+            />
+          {/each}
+        </g>
+        <g transform="translate(0, {usableArea.bottom})" bind:this={xAxis} />
+        <g
+          class="gridlines"
+          transform="translate({usableArea.left}, 0)"
+          bind:this={yAxisGridlines}
         />
-      {/each}
-    </g>
-    <g transform="translate(0, {usableArea.bottom})" bind:this={xAxis} />
-    <g
-      class="gridlines"
-      transform="translate({usableArea.left}, 0)"
-      bind:this={yAxisGridlines}
-    />
 
-    <g transform="translate({usableArea.left}, 0)" bind:this={yAxis} />
-  </svg>
-</div>
+        <g transform="translate({usableArea.left}, 0)" bind:this={yAxis} />
+      </svg>
+    </div>
 
-<Bar data={languageBreakdown} {width} />
+    <Bar data={languageBreakdown} {width} />
+  </svelte:fragment>
+</Scrolly>
 
 <style>
   @starting-style {
